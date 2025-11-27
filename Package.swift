@@ -18,6 +18,9 @@ let package = Package(
                 .product(name: "Commander", package: "Commander"),
                 .product(name: "AEXML", package: "AEXML"),
             ],
+            resources: [
+                .copy("Stencils/")
+            ]
         )
     ]
 )

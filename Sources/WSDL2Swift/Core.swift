@@ -3,9 +3,7 @@ import Foundation
 import Stencil
 
 private func template(named name: String) -> Template {
-    let fullName = "\(name).stencil"
-    let filePath = URL(fileURLWithPath: "/Users/FIXME/WSDL2Swift/Sources/WSDL2Swift/Stencils").appending(path: fullName)
-    return try! Template(URL: filePath)
+    return try! Template(URL: Bundle.module.url(forResource: name, withExtension: "stencil", subdirectory: "Stencils")!)
 }
 
 private let typeMap: [String: String] = [
@@ -120,10 +118,10 @@ struct Core {
         guard xsd.root.name == "schema" else { return nil }
         let complexTypes: [AEXMLElement] =
             (xsd.root["complexType"].all ?? [])
-            + ((xsd.root["element"].all ?? []).flatMap { $0["complexType"].all }.joined())
+            + ((xsd.root["element"].all ?? []).compactMap { $0["complexType"].all }.joined())
         let types =
             complexTypes
-            .flatMap { XSDType.deserialize($0, prefix: prefix) }
+            .compactMap { XSDType.deserialize($0, prefix: prefix) }
             .map { (prefix, $0) }
         return types
     }
